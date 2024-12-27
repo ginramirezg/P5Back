@@ -1,8 +1,16 @@
-export function add(a: number, b: number): number {
-  return a + b;
-}
+import { ApolloServer } from "@apollo/server";
+import { schema } from "./schema.ts";
+import { startStandaloneServer } from "@apollo/server/standalone";
+import { resolvers } from "./resolvers.ts";
 
-// Learn more at https://docs.deno.com/runtime/manual/examples/module_metadata#concepts
-if (import.meta.main) {
-  console.log("Add 2 + 3 =", add(2, 3));
-}
+
+const server = new ApolloServer({
+  typeDefs: schema,
+  resolvers,
+});
+
+const { url } = await startStandaloneServer(server, {
+  context: async () => ({}),
+});
+
+console.log(`🚀  Server ready at: ${url}`);
